@@ -1,0 +1,4 @@
+hostname: localhost
+port: 12345
+delta_path: "/path/to/folder"
+database: "db"
