@@ -3,37 +3,38 @@ require 'net/http'
 module Couch
 
   class Server
-    def initialize(host, port, options = nil)
+    def initialize(host, port)
       @host = host
-      @port = port
-      @options = options
+      @port = port 
     end
 
-    def delete(uri)
-      request(Net::HTTP::Delete.new(uri))
+    def delete(uri, options = {:suppress_exceptions=>false})
+      request(Net::HTTP::Delete.new(uri),options)
     end
 
-    def get(uri)
-      request(Net::HTTP::Get.new(uri))
+    def get(uri, options = {:suppress_exceptions=>false})
+      request(Net::HTTP::Get.new(uri),options)
     end
 
-    def put(uri, json)
+    def put(uri, json, options = {:suppress_exceptions=>false})
       req = Net::HTTP::Put.new(uri)
       req["content-type"] = "application/json"
       req.body = json
-      request(req)
+      request(req,options)
     end
 
-    def post(uri, json)
+    def post(uri, json, options = {:suppress_exceptions=>false})
       req = Net::HTTP::Post.new(uri)
       req["content-type"] = "application/json"
       req.body = json
-      request(req)
+      request(req,options)
     end
 
-    def request(req)
+    def request(req, options)
       res = Net::HTTP.start(@host, @port) { |http|http.request(req) }
-      unless res.kind_of?(Net::HTTPSuccess)
+      isError = !res.kind_of?(Net::HTTPSuccess)
+      shouldSupress = options[:suppress_exceptions]   
+      if isError and !shouldSupress  
         handle_error(req, res)
       end
       res

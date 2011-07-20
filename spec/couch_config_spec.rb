@@ -6,7 +6,7 @@ describe CouchConfig, "read couch db config" do
   end
   
   it "should load portnumber from couchdb.yml" do
-    CouchConfig.new(File.dirname(__FILE__) + '/couchdb.yml').port.should == 12345
+    CouchConfig.new(File.dirname(__FILE__) + '/couchdb.yml').port.should == 5984
   end
   
   it "should load delta path" do
@@ -14,7 +14,7 @@ describe CouchConfig, "read couch db config" do
   end
 
   it "should load database name" do
-    CouchConfig.new(File.dirname(__FILE__) + '/couchdb.yml').database.should == "db"
+    CouchConfig.new(File.dirname(__FILE__) + '/couchdb.yml').database.should == "test"
   end
 
   it "should fail with an exception when config file is not found" do
