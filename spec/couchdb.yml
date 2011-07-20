@@ -1,4 +1,4 @@
 hostname: localhost
 port: 5984
-delta_path: "/path/to/folder"
+delta_path: "integration/deltas"
 database: "test"

@@ -11,17 +11,15 @@ end
 describe Repository, "execute a delta" do
   it "load relavent documents to apply delta" do
      map_function = "{'map':'function(doc){emit(null,doc);}'}"
-     mock_config = mock(CouchConfig)
-     mock_config.should_receive(:hostname).any_number_of_times.and_return("localhost")
-     mock_config.should_receive(:port).any_number_of_times.and_return(1234)
-     mock_config.should_receive(:database).any_number_of_times.and_return("db")
+     config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
      mock_server = mock(Couch::Server)
      Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
      mock_response = mock(Net::HTTPResponse)
      mock_server.should_receive(:post).with("/db/_temp_view?limit=10&skip=0",map_function).and_return(mock_response)
      json = create_json_response(1,1)
      mock_response.should_receive(:body).and_return(json)
-     repository = Repository.new(mock_config)
+     
+     repository = Repository.new(config)
      rows = []
      repository.get_documents(map_function) do |row|
        rows.push(row)
@@ -31,10 +29,7 @@ describe Repository, "execute a delta" do
    
    it "load relavent documents to apply delta with paging" do
       map_function = "{'map':'function(doc){emit(null,doc);}'}"
-      mock_config = mock(CouchConfig)
-      mock_config.should_receive(:hostname).any_number_of_times.and_return("localhost")
-      mock_config.should_receive(:port).any_number_of_times.and_return(1234)
-      mock_config.should_receive(:database).any_number_of_times.and_return("db")
+      config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
       mock_server = mock(Couch::Server)
       Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
       mock_response = mock(Net::HTTPResponse)
@@ -48,7 +43,7 @@ describe Repository, "execute a delta" do
       mock_response.should_receive(:body).and_return(json)
 
       
-      repository = Repository.new(mock_config)
+      repository = Repository.new(config)
       rows = []
       repository.get_documents(map_function) do |row|
         rows.push(row)

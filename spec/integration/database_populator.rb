@@ -27,4 +27,3 @@ class DatabasePopulator
 end
 
 
-DatabasePopulator.new("test").with_type("customer").with_records(30).build

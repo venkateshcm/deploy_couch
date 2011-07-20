@@ -2,8 +2,12 @@ require 'yaml'
 
 class CouchConfig
 
-  def initialize(config_file)
-      @config = YAML.load_file(config_file)
+  def initialize(config)
+      @config = config
+  end
+  
+  def self.create_from_file(config_file)
+      CouchConfig.new(YAML.load_file(config_file))
   end
   
   def hostname
@@ -20,6 +24,10 @@ class CouchConfig
 
   def database
     @config["database"]
+  end
+  
+  def merge_config(config)
+    @config = @config.merge(config)
   end
   
 end
