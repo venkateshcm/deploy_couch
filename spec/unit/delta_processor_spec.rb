@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
-
-
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe DeltaProcessor, "execute a delta" do
   it "load relavent documents and apply delta" do
@@ -17,18 +15,4 @@ describe DeltaProcessor, "execute a delta" do
     delta = DeltaProcessor.new("customer","function map(doc){ doc.address = 'new address';}",mock_repository)
     delta.apply
   end
-end
-
-describe DeltaProcessor, "integration" do  
-  it "integration load relavent documents and apply delta" do
-    config = CouchConfig.new(File.dirname(__FILE__) + '/couchdb.yml')
-    repository = Repository.new(config)
-    delta = DeltaProcessor.new("customer","function map(doc){ doc.address = 'new address';}",repository)
-    delta.apply
-    
-    repository.get_documents("{\"map\":\"function (doc){if(doc.type=='customer'){emit(null,doc);}}\"}") do |row|
-      row['value']["address"].should == 'new address'
-    end
-  end
-  
 end

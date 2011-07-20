@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/spec_helper'
-
 class DatabasePopulator
   def initialize(database)
     @database = database
