@@ -61,5 +61,33 @@ describe Repository, "execute a delta" do
        repository.put_document(json)
      end
 
+     it "delete document" do
+        json = {"_id"=> 1757, "name" => "name_1","_rev"=> 10}
+        mock_server = mock(Couch::Server)
+        Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
+        mock_response = mock(Net::HTTPResponse)
+        mock_server.should_receive(:delete).with("/db/#{json['_id']}?rev=10").and_return(mock_response)
+
+        repository = Repository.new(get_couchdb_config)
+        rows = []
+        repository.delete_document(json)
+      end
+
+      it "get schema document" do
+         json = {"_id"=> 1757, "name" => "name_1","_rev"=> 10}
+         mock_server = mock(Couch::Server)
+         Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
+         mock_response = mock(Net::HTTPResponse)
+         schema =  {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[1,2], "type_versions"=>{"customer"=>10}}
+         mock_response.should_receive(:body).and_return(schema.to_json)
+         mock_response.should_receive(:kind_of?).with(Net::HTTPSuccess).and_return(true)
+         mock_server.should_receive(:get).with("/db/schema__schema_document_key__", {:suppress_exceptions=>true}).and_return(mock_response)
+
+         repository = Repository.new(get_couchdb_config)
+         rows = []
+         repository.get_schema.should == schema
+         
+       end
+
   
 end

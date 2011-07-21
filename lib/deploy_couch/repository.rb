@@ -29,6 +29,22 @@ class Repository
     server = Couch::Server.new(@config.hostname,@config.port)
     server.put("/#{@config.database}/#{json['_id']}",json.to_json)
   end
+
+  def delete_document(json)
+    server = Couch::Server.new(@config.hostname,@config.port)
+    server.delete("/#{@config.database}/#{json['_id']}?rev=#{json['_rev']}")
+  end
+  
+  def get_schema
+    server = Couch::Server.new(@config.hostname,@config.port)
+    res = server.get("/#{@config.database}/schema__schema_document_key__",{:suppress_exceptions=>true})
+    json = JSON.parse(res.body) if res.kind_of?(Net::HTTPSuccess)
+  end
+
+  def create_schema(json)
+    server = Couch::Server.new(@config.hostname,@config.port)
+    res = server.post("/#{@config.database}/",json.to_json)
+  end
   
   
 end

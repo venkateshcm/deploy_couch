@@ -20,5 +20,19 @@ describe Repository, "execute a delta" do
       rows.count.should == 2
     end
     
+     it "create schema document if it does not exist and get schema to verify" do
+       config = CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
+       config.merge_config({"database"=>"db"})
+       schema =  {"_id"=>"schema__schema_document_key__","type"=>"__schema__", 'applied_deltas'=>[], "type_versions"=>{}}
+       repository = Repository.new(config)
+       rows = []
+       repository.create_schema(schema)
+       schema_doc = repository.get_schema
+       schema_doc['_id'].should == schema['_id']
+       schema_doc['type'].should == schema['type']
+       schema_doc['applied_deltas'].should == schema['applied_deltas']
+       schema_doc['type_versions'].should == schema['type_versions']
+      end
+
   
 end

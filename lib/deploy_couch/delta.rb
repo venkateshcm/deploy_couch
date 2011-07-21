@@ -1,9 +1,15 @@
 class Delta
-  def initialize(file_name,type,map_function)
+  def initialize(id,file_name,type,map_function)
+    @id=id
     @file_name = file_name
     @type = type
     @map_function = map_function
   end
+
+  def id
+    @id
+  end
+
   
   def file_name
     @file_name

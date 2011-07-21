@@ -18,16 +18,16 @@ class DeltaLoader
         raise e
       end
       
-      hash[key] = convert_to_delta(file) 
+      hash[key] = convert_to_delta(key,file) 
     end
     hash
   end
   
-  def convert_to_delta(file)
+  def convert_to_delta(id, file)
     delta_config = YAML.load_file(file)
     file_name = File.basename(file)
     raise "#{file_name} content is not valid " if delta_config['type'].nil? or delta_config['map_function'].nil?
-    Delta.new(file_name,delta_config['type'],delta_config['map_function'])
+    Delta.new(id,file_name,delta_config['type'],delta_config['map_function'])
   end
   
 end

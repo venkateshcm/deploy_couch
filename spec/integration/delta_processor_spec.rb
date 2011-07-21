@@ -12,7 +12,7 @@ describe DeltaProcessor, "integration" do
   it "integration load relavent documents and apply delta" do
     config = CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
     repository = Repository.new(config)
-    delta = Delta.new('file_name',"customer","function map(doc){ doc.address = 'new address'; return 'update'}")
+    delta = Delta.new(1,'file_name',"customer","function map(doc){ doc.address = 'new address'; return 'update'}")
     delta_processor = DeltaProcessor.new(config,delta,repository)
     delta_processor.apply
     

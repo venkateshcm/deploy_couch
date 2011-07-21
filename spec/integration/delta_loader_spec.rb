@@ -4,8 +4,8 @@ describe DeltaLoader, "load all delta" do
 
   it "should load all YAML files from the deltas folder" do
     
-    map_function = "function map(doc) { doc.address = 'some address'; return 'update'; }" 
-    
+    map_function = "function map(doc) { doc.address = \"some address\"; return 'update'; }" 
+
     delta_loader = DeltaLoader.new(File.dirname(__FILE__)+'/deltas')
     deltas = delta_loader.get_deltas
     deltas.count.should == 4
