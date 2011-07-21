@@ -1,0 +1,8 @@
+type: customer
+map_function:
+    function map(doc)
+    {
+        if(doc.name = "name_1")
+            return 'delete';
+        return null;
+    }

@@ -1,0 +1,7 @@
+type: customer
+map_function:
+    function map(doc)
+    {
+        doc.address = "some address";
+        return 'update';
+    }
