@@ -13,6 +13,11 @@ class DatabasePopulator
     self
   end
   
+  def with_schema(schema_json)
+    @schema = schema_json
+    self
+  end
+  
   def build
     server = Couch::Server.new("localhost",5984)
     res = server.get("/#{@database}/",{:suppress_exceptions=>true})
@@ -22,6 +27,9 @@ class DatabasePopulator
       h = {"name"=> "name_#{i}","type"=>@doc_type}
       server.post("/#{@database}/",JSON.generate(h))
     end
+    
+    server.post("/#{@database}/",@schema.to_json) if @schema
+    
   end
     
 end
