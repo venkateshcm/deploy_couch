@@ -50,5 +50,19 @@ describe Repository, "execute a delta" do
       end
       rows.count.should == 15
     end
+
+    it "put document to update document" do
+       config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
+       json = {"_id"=> 1757, "name" => "name_1"}
+       mock_server = mock(Couch::Server)
+       Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
+       mock_response = mock(Net::HTTPResponse)
+       mock_server.should_receive(:put).with("/db/#{json['_id']}",json.to_json).and_return(mock_response)
+
+       repository = Repository.new(config)
+       rows = []
+       repository.put_document(json)
+     end
+
   
 end

@@ -2,6 +2,6 @@ type: customer
 map_function:
     function map(doc)
     {
-        doc.phone = "09090";
+        doc.phone = '897907979';
         return 'update';
     }

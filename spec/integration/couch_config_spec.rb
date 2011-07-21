@@ -10,7 +10,7 @@ describe CouchConfig, "read couch db config" do
   end
   
   it "should load delta path" do
-    CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml').delta_path.should == "integration/deltas"
+    CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml').delta_path.should == File.dirname(__FILE__) + "/../integration/deltas"
   end
 
   it "should load database name" do
