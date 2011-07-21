@@ -27,6 +27,11 @@ class CouchConfig
   def database
     @config["database"]
   end
+
+  def doc_type_field
+    @config["doc_type_field"]
+  end
+
   
   def merge_config(config)
     @config = @config.merge(config)

@@ -11,7 +11,6 @@ end
 describe Repository, "execute a delta" do
   it "load relavent documents to apply delta" do
      map_function = "{'map':'function(doc){emit(null,doc);}'}"
-     config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
      mock_server = mock(Couch::Server)
      Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
      mock_response = mock(Net::HTTPResponse)
@@ -19,7 +18,7 @@ describe Repository, "execute a delta" do
      json = create_json_response(1,1)
      mock_response.should_receive(:body).and_return(json)
      
-     repository = Repository.new(config)
+     repository = Repository.new(get_couchdb_config)
      rows = []
      repository.get_documents(map_function) do |row|
        rows.push(row)
@@ -29,7 +28,6 @@ describe Repository, "execute a delta" do
    
    it "load relavent documents to apply delta with paging" do
       map_function = "{'map':'function(doc){emit(null,doc);}'}"
-      config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
       mock_server = mock(Couch::Server)
       Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
       mock_response = mock(Net::HTTPResponse)
@@ -43,7 +41,7 @@ describe Repository, "execute a delta" do
       mock_response.should_receive(:body).and_return(json)
 
       
-      repository = Repository.new(config)
+      repository = Repository.new(get_couchdb_config)
       rows = []
       repository.get_documents(map_function) do |row|
         rows.push(row)
@@ -52,14 +50,13 @@ describe Repository, "execute a delta" do
     end
 
     it "put document to update document" do
-       config = CouchConfig.new({"hostname"=>"localhost","port"=>1234,"database"=>"db"})
        json = {"_id"=> 1757, "name" => "name_1"}
        mock_server = mock(Couch::Server)
        Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
        mock_response = mock(Net::HTTPResponse)
        mock_server.should_receive(:put).with("/db/#{json['_id']}",json.to_json).and_return(mock_response)
 
-       repository = Repository.new(config)
+       repository = Repository.new(get_couchdb_config)
        rows = []
        repository.put_document(json)
      end

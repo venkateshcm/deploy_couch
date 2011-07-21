@@ -13,7 +13,7 @@ describe DeltaProcessor, "execute a delta" do
     mock_repository.should_receive(:get_documents).with(map_function).and_yield(h)
     mock_repository.should_receive(:put_document).with(h['value'])
     delta = Delta.new('file_name',"customer","function map(doc){ doc.address = 'new address';}")
-    delta_processor = DeltaProcessor.new(delta,mock_repository)
+    delta_processor = DeltaProcessor.new(get_couchdb_config,delta,mock_repository)
     delta_processor.apply
   end
 end

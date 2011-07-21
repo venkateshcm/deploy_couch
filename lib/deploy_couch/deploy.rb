@@ -10,7 +10,7 @@ class Deploy
     keys = deltas_map.keys.sort
     keys.each do |key|
       delta = deltas_map[key]
-      DeltaProcessor.new(delta,repository).apply
+      DeltaProcessor.new(@config,delta,repository).apply
     end  
   end
   
