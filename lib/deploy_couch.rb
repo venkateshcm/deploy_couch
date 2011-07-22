@@ -1,4 +1,8 @@
-require 'deploy_couch/couch_config'
+require 'json'
+require 'yaml'
+require 'net/http'
+
+require 'deploy_couch/config'
 require 'deploy_couch/repository'
 require 'deploy_couch/delta_processor'
 require 'deploy_couch/delta_loader'

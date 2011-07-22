@@ -1,6 +1,4 @@
-require 'net/http'
-
-module Couch
+module DeployCouch
 
   class Server
     def initialize(host, port)
