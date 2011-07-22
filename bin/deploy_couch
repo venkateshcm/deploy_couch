@@ -1,3 +1,16 @@
 #!/usr/bin/env ruby
 
-puts "hellooooooooooooooo"
+if (ARGV.length != 1)
+  puts "usage: deploy_couch 'path/to/couchdb.yml' "
+  exit(-1)
+end
+if (!File.exists?(ARGV[0]))
+  puts "file '#{ARGV[0]}' does not exist "
+  exit(-1)
+end
+
+require 'deploy_couch'
+
+config = DeployCouch::Config.create_from_file(ARGV[0])
+deploy = DeployCouch::Deploy.new(config)
+deploy.run
