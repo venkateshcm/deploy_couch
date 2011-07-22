@@ -32,5 +32,21 @@ describe CouchDbSchema, "Manage Schema" do
     schema.type_versions.should == {'type'=>1}
   end
 
+  it "should get next type version for a given type" do
+    schema_doc = {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[], "type_versions"=>{'customer'=> 20}}
+    repository = mock(Repository)    
+    schema = CouchDbSchema.new(schema_doc,repository)
+    schema.get_next_type_version_for('customer').should == 21
+  end
+
+  it "should get next type version for a given type for non-existing schema" do
+    schema_doc = {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[], "type_versions"=>{}}
+    repository = mock(Repository)
+    schema = CouchDbSchema.new(schema_doc,repository)
+    schema.get_next_type_version_for('customer').should == 1
+  end
+
+
+
   
 end

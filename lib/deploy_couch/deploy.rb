@@ -18,7 +18,8 @@ class Deploy
     
     delta_keys_to_apply.each do |key|
       delta = deltas_map[key]
-      DeltaProcessor.new(@config,delta,repository).apply
+      type = couch_schema.get_next_type_version_for(delta.type)
+      DeltaProcessor.new(type,@config,delta,repository).apply
       couch_schema.completed(delta)
       applied_deltas.push(delta)
     end  

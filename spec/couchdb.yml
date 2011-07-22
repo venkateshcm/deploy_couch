@@ -3,3 +3,4 @@ port: 5984
 delta_path: "integration/deltas"
 database: "test"
 doc_type_field: type
+type_version_field: type_version

@@ -21,6 +21,11 @@ describe CouchConfig, "read couch db config" do
     CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml').doc_type_field.should == "type"
   end
 
+  it "should load type version field" do
+    CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml').type_version_field.should == "type_version"
+  end
+
+
   it "should merge config with passed in values" do
     config = CouchConfig.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
     config.merge_config("database"=>"db")

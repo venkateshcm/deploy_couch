@@ -15,18 +15,20 @@ describe Deploy, "load and execute deltas" do
     Repository.should_receive(:new).with(config).and_return(mock_repository)
 
     mock_delta_processor = mock(DeltaProcessor)
-    DeltaProcessor.should_receive(:new).with(config,delta,mock_repository).ordered.and_return(mock_delta_processor)    
+    DeltaProcessor.should_receive(:new).with(1,config,delta,mock_repository).ordered.and_return(mock_delta_processor)    
     mock_delta_processor.should_receive(:apply)
 
     mock_delta_processor2 = mock(DeltaProcessor)
-    DeltaProcessor.should_receive(:new).with(config,delta2,mock_repository).ordered.and_return(mock_delta_processor2)    
+    DeltaProcessor.should_receive(:new).with(2,config,delta2,mock_repository).ordered.and_return(mock_delta_processor2)    
     mock_delta_processor2.should_receive(:apply)
 
     mock_couch_db_schema = mock(CouchDbSchema)
     mock_couch_db_schema.should_receive(:applied_deltas).and_return([])
-    CouchDbSchema.should_receive(:load_or_create).with(config,mock_repository).ordered.and_return(mock_couch_db_schema)    
-    mock_couch_db_schema.should_receive(:completed).with(delta)
-    mock_couch_db_schema.should_receive(:completed).with(delta2)
+    CouchDbSchema.should_receive(:load_or_create).with(config,mock_repository).ordered.and_return(mock_couch_db_schema) 
+    mock_couch_db_schema.should_receive(:get_next_type_version_for).with('type').ordered.and_return(1)   
+    mock_couch_db_schema.should_receive(:completed).ordered.with(delta)
+    mock_couch_db_schema.should_receive(:get_next_type_version_for).with('type').ordered.and_return(2)
+    mock_couch_db_schema.should_receive(:completed).ordered.with(delta2)
     
     deploy = Deploy.new(config)
     deploy.run
@@ -46,12 +48,13 @@ describe Deploy, "load and execute deltas" do
     Repository.should_receive(:new).with(config).and_return(mock_repository)
 
     mock_delta_processor = mock(DeltaProcessor)
-    DeltaProcessor.should_receive(:new).with(config,delta2,mock_repository).and_return(mock_delta_processor)    
+    DeltaProcessor.should_receive(:new).with(1,config,delta2,mock_repository).and_return(mock_delta_processor)    
     mock_delta_processor.should_receive(:apply)
 
     mock_couch_db_schema = mock(CouchDbSchema)
     mock_couch_db_schema.should_receive(:applied_deltas).and_return([1])
     CouchDbSchema.should_receive(:load_or_create).with(config,mock_repository).ordered.and_return(mock_couch_db_schema)    
+    mock_couch_db_schema.should_receive(:get_next_type_version_for).with('type').ordered.and_return(1)   
     mock_couch_db_schema.should_receive(:completed).with(delta2)
     
     deploy = Deploy.new(config)

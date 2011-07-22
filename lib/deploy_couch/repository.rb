@@ -24,6 +24,21 @@ class Repository
       finish_loading_all = true if no_of_records >= json["total_rows"]
     end
   end
+
+  def get_documents_to_modify(map_function)
+    server = Couch::Server.new(@config.hostname,@config.port)
+    finish_loading_all = false
+    
+    while(!finish_loading_all)
+      response = server.post("/#{@config.database}/_temp_view?limit=#{PAGE_SIZE}",map_function)
+      json = JSON.parse(response.body)
+      json["rows"].each do |row|
+        yield row
+      end
+      finish_loading_all = json["total_rows"] <= 10
+    end
+  end
+
   
   def put_document(json)
     server = Couch::Server.new(@config.hostname,@config.port)

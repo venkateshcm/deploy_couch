@@ -9,7 +9,7 @@ def create_json_response(total_rows,num_of_records,offset=0)
 end
 
 describe Repository, "execute a delta" do
-  it "load relavent documents to apply delta" do
+  it "load relavent documents" do
      map_function = "{'map':'function(doc){emit(null,doc);}'}"
      mock_server = mock(Couch::Server)
      Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
@@ -26,7 +26,7 @@ describe Repository, "execute a delta" do
      rows.count.should == 1
    end
    
-   it "load relavent documents to apply delta with paging" do
+   it "load relavent documents" do
       map_function = "{'map':'function(doc){emit(null,doc);}'}"
       mock_server = mock(Couch::Server)
       Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
@@ -88,6 +88,46 @@ describe Repository, "execute a delta" do
          repository.get_schema.should == schema
          
        end
+
+       it "load relavent documents to apply delta with paging" do
+          map_function = "{'map':'function(doc){emit(null,doc);}'}"
+          mock_server = mock(Couch::Server)
+          Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
+          mock_response = mock(Net::HTTPResponse)
+          mock_server.should_receive(:post).with("/db/_temp_view?limit=10",map_function).and_return(mock_response)
+          json = create_json_response(15,10)
+          mock_response.should_receive(:body).and_return(json)
+
+          mock_response = mock(Net::HTTPResponse)
+          mock_server.should_receive(:post).with("/db/_temp_view?limit=10",map_function).and_return(mock_response)
+          json = create_json_response(5,5,0)
+          mock_response.should_receive(:body).and_return(json)
+
+
+          repository = Repository.new(get_couchdb_config)
+          rows = []
+          repository.get_documents_to_modify(map_function) do |row|
+            rows.push(row)
+          end
+          rows.count.should == 15
+        end
+
+        it "load relavent documents to apply delta with paging for page size rows" do
+           map_function = "{'map':'function(doc){emit(null,doc);}'}"
+           mock_server = mock(Couch::Server)
+           Couch::Server.should_receive(:new).with("localhost",1234).and_return(mock_server)
+           mock_response = mock(Net::HTTPResponse)
+           mock_server.should_receive(:post).with("/db/_temp_view?limit=10",map_function).and_return(mock_response)
+           json = create_json_response(10,10)
+           mock_response.should_receive(:body).and_return(json)
+
+           repository = Repository.new(get_couchdb_config)
+           rows = []
+           repository.get_documents_to_modify(map_function) do |row|
+             rows.push(row)
+           end
+           rows.count.should == 10
+         end
 
   
 end

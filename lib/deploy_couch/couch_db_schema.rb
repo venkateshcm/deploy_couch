@@ -21,8 +21,18 @@ class CouchDbSchema
 
   def type_versions
     @schema["type_versions"]
-  end  
+  end
   
+  def get_next_type_version_for(type)
+    current_version = type_versions[type]
+    current_version = 0 if current_version.nil?    
+    current_version += 1
+  end  
+
+  def type_version_field
+    @schema["type_version_field"]
+  end  
+    
   def completed(delta)
     @schema['applied_deltas'].push(delta.id)
     current_type_version = @schema['type_versions'].has_key?(delta.type) ? @schema['type_versions'][delta.type] : 0
