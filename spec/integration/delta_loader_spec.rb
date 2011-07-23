@@ -7,13 +7,15 @@ module DeployCouch
     it "should load all YAML files from the deltas folder" do
     
       map_function = "function map(doc) { doc.address = \"some address\"; return 'update'; }" 
+      rollback_function = "function rollback(doc) { delete doc.address; return 'update'; }" 
 
       delta_loader = DeltaLoader.new(File.dirname(__FILE__)+'/deltas')
       deltas = delta_loader.get_deltas
-      deltas.count.should == 4
+      deltas.count.should == 5
       deltas[1].file_name.should == "1_add_address_to_customer.yml"
       deltas[1].type.should == "customer"
       deltas[1].map_function.should == map_function
+      deltas[1].rollback_function.should == rollback_function
     end
   
     it "should  raise an error when file is not in deltanumber_description format" do

@@ -4,8 +4,8 @@ module DeployCouch
   describe Deploy, "load and execute deltas" do
     it "load and execute deltas in correct order" do
       config = get_couchdb_config
-      delta = Delta.new(1,'file_name','type','map function')
-      delta2 = Delta.new(10,'file_name2','type','map function')
+      delta = Delta.new(1,'file_name','type','map function','rollback_function')
+      delta2 = Delta.new(10,'file_name2','type','map function','rollback_function')
       deltas_map = {1=>delta,10=>delta2}
     
       mock_delta_loader = mock(DeltaLoader)
@@ -37,8 +37,8 @@ module DeployCouch
   
     it "executes unapplied deltas only in correct order" do
       config = get_couchdb_config
-      delta = Delta.new(1,'file_name','type','map function')
-      delta2 = Delta.new(10,'file_name2','type','map function')
+      delta = Delta.new(1,'file_name','type','map function','rollback_function')
+      delta2 = Delta.new(10,'file_name2','type','map function','rollback_function')
       deltas_map = {1=>delta,10=>delta2}
     
       mock_delta_loader = mock(DeltaLoader)

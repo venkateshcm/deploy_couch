@@ -29,7 +29,7 @@ module DeployCouch
       repository.should_receive(:put_document).ordered.with(updated_schema_doc)    
       repository.should_receive(:get_schema).ordered.and_return(updated_schema_doc)    
       schema = DbSchema.new(schema_doc,repository)
-      schema.completed(Delta.new(1,'file_name','type','map_function'))
+      schema.completed(Delta.new(1,'file_name','type','map_function','rollback_function'))
       schema.applied_deltas.should == [1]
       schema.type_versions.should == {'type'=>1}
     end

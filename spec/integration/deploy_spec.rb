@@ -2,22 +2,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/database_populator'
 
 module DeployCouch
-  describe Deploy, "load and execute deltas first database" do
-  
-    before :all do
-      DatabasePopulator.new("test").with_type("customer").with_records(30).build
-    end
-  
-    it "load and execute deltas" do    
-      config = Config.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
-      deploy = Deploy.new(config)
-      deltas = deploy.run
-      deltas.count.should == 4
-      deltas[0].file_name.should == "1_add_address_to_customer.yml"
-    
-    end
-  end
-
 
   describe Deploy, "load and execute deltas" do
     before :all do
@@ -31,10 +15,25 @@ module DeployCouch
       config = Config.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
       deploy = Deploy.new(config)
       deltas = deploy.run
-      deltas.count.should == 1
+      deltas.count.should == 2
       deltas[0].file_name.should == "12_delete_customer_name_1.yml"
       
     end
   end
   
+  describe Deploy, "load and execute deltas first database" do
+  
+    before :all do
+      DatabasePopulator.new("test").with_type("customer").with_records(30).build
+    end
+  
+    it "load and execute deltas" do    
+      config = Config.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
+      deploy = Deploy.new(config)
+      deltas = deploy.run
+      deltas.count.should == 5
+      deltas[0].file_name.should == "1_add_address_to_customer.yml"    
+    end
+  end
+
 end

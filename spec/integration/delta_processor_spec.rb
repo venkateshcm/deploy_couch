@@ -13,7 +13,7 @@ module DeployCouch
     it "integration load relavent documents and apply delta" do
       config = Config.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
       repository = Repository.new(config)
-      delta = Delta.new(1,'file_name',"customer","function map(doc){ doc.address = 'new address'; return 'update';}")
+      delta = Delta.new(1,'file_name',"customer","function map(doc){ doc.address = 'new address'; return 'update';}",'rollback_function')
       delta_processor = DeltaProcessor.new(1,config,delta,repository)
       delta_processor.apply
     

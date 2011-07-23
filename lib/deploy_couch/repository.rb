@@ -45,6 +45,12 @@ module DeployCouch
       server.put("/#{@config.database}/#{json['_id']}",json.to_json)
     end
 
+    def post_document(json)
+      server = Server.new(@config.hostname,@config.port)
+      server.post("/#{@config.database}",json.to_json)
+    end
+
+
     def delete_document(json)
       server = Server.new(@config.hostname,@config.port)
       server.delete("/#{@config.database}/#{json['_id']}?rev=#{json['_rev']}")

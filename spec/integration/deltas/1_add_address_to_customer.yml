@@ -5,3 +5,10 @@ map_function:
         doc.address = "some address";
         return 'update';
     }
+rollback_function:
+    function rollback(doc)
+    {
+        delete doc.address;
+        return 'update';
+    }
+    

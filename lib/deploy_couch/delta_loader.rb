@@ -29,7 +29,7 @@ module DeployCouch
       delta_config = YAML.load_file(file)
       file_name = File.basename(file)
       raise "#{file_name} content is not valid " if delta_config['type'].nil? or delta_config['map_function'].nil?
-      Delta.new(id,file_name,delta_config['type'],delta_config['map_function'])
+      Delta.new(id,file_name,delta_config['type'],delta_config['map_function'],delta_config['rollback_function'])
     end
   
   end

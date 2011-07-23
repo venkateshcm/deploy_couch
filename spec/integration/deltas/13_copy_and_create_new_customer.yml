@@ -1,0 +1,12 @@
+type: customer
+map_function:
+    function map(doc)
+    {
+        if(doc.name == 'name_2')
+        {
+            delete doc._id;
+            doc.name = 'new name';
+            return 'create';
+        }
+        return null;
+    }
