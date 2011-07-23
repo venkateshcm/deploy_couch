@@ -28,7 +28,7 @@ module DeployCouch
         #{user_rollback_function}"
         }
       JSON
-      modify_document(rollback_function,current_type_version)
+      modify_document(rollback_function,current_type_version-1)
     end
     
     

@@ -38,6 +38,32 @@ module DeployCouch
     
       deltas
     end
+    
+    def rollback
+      repository = Repository.new(@config)
+      delta_loader = DeltaLoader.new(@config.delta_path)
+      deltas_map = delta_loader.get_deltas
+      couch_schema = DbSchema.load_or_create(@config,repository)
+      applied_deltas = couch_schema.applied_deltas.sort.reverse
+    
+      deltas = []
+      puts "Already applied deltas #{applied_deltas}"
+      puts "Rolling back deltas #{applied_deltas}"
+      puts ""
+      puts "Start rolling back deltas"
+    
+      applied_deltas.each do |key|
+        delta = deltas_map[key]
+        type = couch_schema.get_next_type_version_for(delta.type)
+        DeltaProcessor.new(type,@config,delta,repository).rollback
+        couch_schema.rollback(delta)
+        deltas.push(delta)
+        puts "rollback delta #{delta.file_name}"
+      end
+
+      puts "Finished rolling back deltas"    
+      deltas      
+    end
   
   end
 

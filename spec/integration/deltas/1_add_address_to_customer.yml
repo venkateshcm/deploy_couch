@@ -6,7 +6,7 @@ map_function:
         return 'update';
     }
 rollback_function:
-    function rollback(doc)
+    function map(doc)
     {
         delete doc.address;
         return 'update';

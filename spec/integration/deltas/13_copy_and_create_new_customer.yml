@@ -10,3 +10,11 @@ map_function:
         }
         return null;
     }
+rollback_function:
+    function map(doc)
+    {
+        if(doc.name == 'new name')
+            return 'delete';
+        return null;
+    }
+    

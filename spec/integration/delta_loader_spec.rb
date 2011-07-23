@@ -7,7 +7,7 @@ module DeployCouch
     it "should load all YAML files from the deltas folder" do
     
       map_function = "function map(doc) { doc.address = \"some address\"; return 'update'; }" 
-      rollback_function = "function rollback(doc) { delete doc.address; return 'update'; }" 
+      rollback_function = "function map(doc) { delete doc.address; return 'update'; }" 
 
       delta_loader = DeltaLoader.new(File.dirname(__FILE__)+'/deltas')
       deltas = delta_loader.get_deltas

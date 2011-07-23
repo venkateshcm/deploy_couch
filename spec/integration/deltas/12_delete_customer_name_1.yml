@@ -6,3 +6,14 @@ map_function:
             return 'delete';
         return null;
     }
+rollback_function:
+    function map(doc)
+    {
+        if(doc.name == 'name_2')
+        {
+            delete doc._id;
+            doc.name = 'name_1';
+            return 'create';
+        }
+        return null;
+    }

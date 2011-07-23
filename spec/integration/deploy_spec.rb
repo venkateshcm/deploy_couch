@@ -36,4 +36,21 @@ module DeployCouch
     end
   end
 
+  describe Deploy, "execute deltas and rollback all deltas" do
+  
+    before :all do
+      DatabasePopulator.new("test").with_type("customer").with_records(30).build
+    end
+  
+    it "load and execute deltas" do    
+      config = Config.create_from_file(File.dirname(__FILE__) + '/../couchdb.yml')
+      deploy = Deploy.new(config)
+      deploy.run      
+      deltas = deploy.rollback
+      deltas.count.should == 5
+      deltas[0].file_name.should == "13_copy_and_create_new_customer.yml"    
+    end
+  end
+
+
 end

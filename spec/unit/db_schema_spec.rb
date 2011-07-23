@@ -34,6 +34,20 @@ module DeployCouch
       schema.type_versions.should == {'type'=>1}
     end
 
+    it "on rollback update schema document" do
+      schema_doc = {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[1], "type_versions"=>{'type'=>1}}
+      updated_schema_doc = {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[], "type_versions"=>{'type'=>0}}
+      repository = mock(Repository)
+      repository.should_receive(:put_document).ordered.with(updated_schema_doc)
+      repository.should_receive(:get_schema).ordered.and_return(updated_schema_doc)    
+      schema = DbSchema.new(schema_doc,repository)
+      schema.rollback(Delta.new(1,'file_name','type','map_function','rollback_function'))
+      schema.applied_deltas.should == []
+      schema.type_versions.should == {'type'=>0}
+    end
+
+
+
     it "should get next type version for a given type" do
       schema_doc = {"_id"=>"special_key","type"=>"__schema__", 'applied_deltas'=>[], "type_versions"=>{'customer'=> 20}}
       repository = mock(Repository)    

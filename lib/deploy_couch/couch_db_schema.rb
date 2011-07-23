@@ -43,6 +43,15 @@ module DeployCouch
       @repository.put_document(@schema)
       @schema = @repository.get_schema
     end
+
+    def rollback(delta)
+      @schema['applied_deltas'].delete(delta.id)
+      current_type_version = @schema['type_versions'].has_key?(delta.type) ? @schema['type_versions'][delta.type] : 0
+      @schema['type_versions'][delta.type] = current_type_version - 1
+    
+      @repository.put_document(@schema)
+      @schema = @repository.get_schema
+    end
   
   end
 

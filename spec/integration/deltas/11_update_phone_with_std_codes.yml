@@ -5,3 +5,9 @@ map_function:
         doc.phone = '+91' + doc.phone;
         return 'update';
     }
+rollback_function:
+    function map(doc)
+    {
+        doc.phone = doc.phone.substring(3);
+        return 'update';
+    }

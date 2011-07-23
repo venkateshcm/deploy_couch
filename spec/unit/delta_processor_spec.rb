@@ -47,7 +47,7 @@ module DeployCouch
       JSON
       h={'key'=> 'update' , 'value'=>{'id'=>"1",'name'=>"name_1", 'address'=>'new address'}}
       mock_repository.should_receive(:get_documents_to_modify).with(map_function).and_yield(h)
-      mock_repository.should_receive(:put_document).with(h['value'].merge({'type_version' => 10}))
+      mock_repository.should_receive(:put_document).with(h['value'].merge({'type_version' => 9}))
       delta = Delta.new(1,'file_name',"customer","function map(doc){ doc.address = 'new address';}","function map(doc){ delete doc.address; return 'update';}")
       next_type_version = 11
       delta_processor = DeltaProcessor.new(next_type_version,get_couchdb_config,delta,mock_repository)
