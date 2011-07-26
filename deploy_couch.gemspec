@@ -5,7 +5,7 @@ require "deploy_couch/version"
 Gem::Specification.new do |s|
   s.name        = "deploy_couch"
   s.version     = DeployCouch::VERSION
-  s.authors     = ["venky/mln"]
+  s.authors     = ["venky","mln"]
   s.email       = ["venkatesh.swdev@gmail.com"]
   s.homepage    = "https://github.com/venkateshcm/deploy_couch"
   s.summary     = "dbDeploy for couchdb"
@@ -17,4 +17,6 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.add_dependency('json')
+  s.add_development_dependency('rspec')
 end
