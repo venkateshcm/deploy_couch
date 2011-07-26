@@ -1,6 +1,6 @@
 deploy_couch
 =============
-deploy_couch is db deploy for couchdb. 
+deploy_couch is db deploy tool for couchdb. 
 
 
 How to install
@@ -10,7 +10,9 @@ gem install deploy_couch
 
 Usage
 ======
-deploy_couch 'path/to/couchdb.yml'
+deploy_couch 'path/to/couchdb.yml' [rollback:(1|2|3|..|all)]
+
+[rollback:all] rollbacks all the deltas
 
 
 Example
