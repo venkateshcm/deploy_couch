@@ -34,21 +34,92 @@ deploy_couch is db deploy tool for couchdb.
 
    <Delta Number>_<Description>.yml
    example :-  1_add_address_to_customer.yml
+               2_add_phone_to_customer.yml
+               11_update_phone_with_std_codes.yml
+               12_delete_customer_with_name_equal_to_name_1.yml
+               13_copy_and_create_new_customer.yml
 
 
-==== Delta File content format for updating documents
+==== Delta File content format 
 
-   type: < document type, example: customer >
-   map_function: <map function used to modify customer document. return value 'update' indicates updating the document with changes>
-    function map(doc)
-    {
-        doc.address = "some address";
-        return 'update';
-    }
-    rollback_function: <rollback function used when rolling back applied delta.>
-    function map(doc)
-    {
-        delete doc.address;
-        return 'update';
-    }
+* type: document type, example: customer. By convention deploy_couch assumes there is a type field in each document which stores the type of document.
+* map_function: map function used to modify customer document. 
+                return value 'create' indicates creating/adding new document
+                return value 'update' indicates updating the document with changes
+                return value 'delete' indicates deleteing the document
+                return value nul indicates ignore the document
+* rollback_function: rollback function used when rolling back applied delta. If there is need to get back to previous version.
 
+
+== Delta File examples
+
+==== Example for adding address field to all customers
+   type: customer
+   map_function:
+              function map(doc)
+              {
+                 doc.address = "some address";
+                 return 'update';
+               }
+   rollback_function:
+              function map(doc)
+              {
+                 delete doc.address;
+                 return 'update';
+              }
+
+==== Example for modifying phone number of all customers
+   type: customer
+   map_function:
+               function map(doc)
+               {
+                     doc.phone = '+91' + doc.phone;
+                     return 'update';
+                }
+   rollback_function:
+                function map(doc)
+                {
+                   doc.phone = doc.phone.substring(3);
+                   return 'update';
+                }
+
+==== Example for creating new document after copying details from another customer
+    type: customer
+    map_function:
+                 function map(doc)
+                 {
+                    if(doc.name == 'name_2')
+                    {
+                       delete doc._id;
+                       doc.name = 'new name';
+                       return 'create';
+                     }
+                     return null;
+                  }
+    rollback_function:
+                  function map(doc)
+                  {
+                     if(doc.name == 'new name')
+                     return 'delete';
+                     return null;
+                  }
+==== Example for deleteing a document
+     type: customer
+     map_function:
+                  function map(doc)
+                  {
+                     if(doc.name == 'name_1')
+                        return 'delete';
+                     return null;
+                  }
+     rollback_function:
+                  function map(doc)
+                  {
+                     if(doc.name == 'name_2')
+                     {
+                          delete doc._id;
+                          doc.name = 'name_1';
+                          return 'create';
+                      }
+                      return null;
+                  }
