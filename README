@@ -10,15 +10,15 @@ gem install deploy_couch
 
 Usage
 ======
-deploy_couch 'path/to/couchdb.yml' [rollback:(1|2|3|..|all)]
+'''deploy_couch 'path/to/couchdb.yml' [rollback:(1|2|3|..|all)]'''
 
 [rollback:all] rollbacks all the deltas
 
 
-Example
+Examples
 =======
-deploy_couch/spec/couchdb.yml         for couchdb.yml config file
-deploy_couch/spec/integration/deltas  for delta files
+'''deploy_couch/spec/couchdb.yml         for couchdb.yml config file
+deploy_couch/spec/integration/deltas  for delta files'''
 
 
 Config Parameters
